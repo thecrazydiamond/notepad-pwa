@@ -44,6 +44,7 @@ import Vue from 'vue';
 import environment from '@/environment';
 import * as fileUtils from '@/utils/file';
 import { StorageKey, getItem } from '@/utils/storage';
+import trimWhiteSpace from '@/utils/filters/trimWhiteSpace';
 
 import Drawer from '@/components/Drawer.vue';
 import Editor from '@/components/Editor.vue';
@@ -101,14 +102,21 @@ export default Vue.extend({
         }
         return;
       }
+      this.filterContents(index);
       fileUtils.write(this.fileHandles[index], this.fileContents[index]);
     },
     async onFileSaveAs(index: number) {
       const handle = await fileUtils.choose(true, environment.accepts);
       if (handle) {
+        this.filterContents(index);
         fileUtils.write(handle, this.fileContents[index]);
         return handle;
       }
+    },
+    filterContents(index: number) {
+      const trimmedContents = [...this.fileContents];
+      trimmedContents[index] = trimWhiteSpace(this.fileContents[index]);
+      this.fileContents = trimmedContents;
     },
     onTabClick(index: number) {
       this.activeIndex = index;

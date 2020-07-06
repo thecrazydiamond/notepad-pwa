@@ -1,3 +1,4 @@
+//eslint-ignore @typescript-eslint/explicit-module-boundary-types
 export interface Accepts {
   description: string;
   extensions: string[];
